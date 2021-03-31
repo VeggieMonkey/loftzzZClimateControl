@@ -12,6 +12,8 @@ Add this snippit to a new file here called `Secrets.h`
 #define SECRET_FIREBASE_API_KEY ""
 #define SECRET_FIREBASE_USER_PASSWORD ""
 #define SECRET_FIREBASE_USER_EMAIL ""
+#define SECRET_FIREBASE_HOST ""
+#define SECRET_FIREBASE_PROJECT_ID ""
 ```
 
 ## Board configuration
@@ -24,10 +26,10 @@ SCL - d1
 SDA - d2
 WAK - g
 
-
 ## DB structure
 
 firebase function to process last 24 hours.
+
 ```
 object logs:
   long timestamp:
