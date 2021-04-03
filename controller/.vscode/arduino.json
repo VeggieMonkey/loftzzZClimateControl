@@ -1,0 +1,5 @@
+{
+    "board": "esp32:8266",
+    "output": "/tmp/arduino/loftz",
+    "sketch": "controller.ino"
+}
