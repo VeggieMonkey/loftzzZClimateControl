@@ -1,9 +1,10 @@
-import { GraphIcon, FanIcon } from "../common";
-import { Logs3 } from "./Logs3";
+import { GraphIcon, FanIcon, HistoryIcon } from "../common";
+import { Logs } from "./Logs";
 import { Fan } from "./Fan";
+import { HistoryManagement } from "./HistoryManagement";
 
 interface Page {
-  Component: React.ReactElement | React.ReactNode;
+  Component: React.FC;
   route: string;
   name: string;
   icon: React.ReactElement | React.ReactNode;
@@ -11,7 +12,7 @@ interface Page {
 
 export const pages: Page[] = [
   {
-    Component: Logs3,
+    Component: Logs,
     route: "/logs",
     name: "Graphs",
     icon: GraphIcon,
@@ -21,5 +22,11 @@ export const pages: Page[] = [
     route: "/fan",
     name: "Fan",
     icon: FanIcon,
+  },
+  {
+    Component: HistoryManagement,
+    route: "/history",
+    name: "History",
+    icon: HistoryIcon,
   },
 ];
