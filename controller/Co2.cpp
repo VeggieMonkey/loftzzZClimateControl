@@ -1,6 +1,6 @@
 #include <Wire.h>   // I2C library
 #include "ccs811.h" // CCS811 library
-#include "Co2.h"
+#include "Co2.h"    // 
 #include <SoftwareSerial.h>
 
 // Wiring for ESP8266 NodeMCU boards: VDD to 3V3, GND to GND, SDA to D2, SCL to D1, nWAKE to D3 (or GND)
@@ -28,8 +28,9 @@ void Co2::setup()
   
   // Start measuring
   ok = ccs811.start(CCS811_MODE_1SEC);
-  if (!ok)
+  if (!ok) {
     Serial.println("CCS811 start FAILED");
+  }
 
 }
 
@@ -58,10 +59,12 @@ void Co2::read(int *val1, int *val2)
   else if (errstat == CCS811_ERRSTAT_OK_NODATA)
   {
     Serial.println("CCS811: waiting for (new) data");
+    return;
   }
   else if (errstat & CCS811_ERRSTAT_I2CFAIL)
   {
     Serial.println("CCS811: I2C error");
+    return;
   }
   else
   {
@@ -69,5 +72,17 @@ void Co2::read(int *val1, int *val2)
     Serial.print(errstat, HEX);
     Serial.print("=");
     Serial.println(ccs811.errstat_str(errstat));
+    return;
   }
+
+  Serial.print("CCS811: ");
+  Serial.print("eco2=");
+  Serial.print(*val1);
+  Serial.print(" ppm  ");
+
+  Serial.print("etvoc=");
+  Serial.print(*val2);
+  Serial.print(" ppb  ");
+  Serial.println();
+
 }

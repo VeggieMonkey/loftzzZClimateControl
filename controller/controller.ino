@@ -1,6 +1,8 @@
-#include "Storage.h"
-#include "FirebaseHelpers.h"
-#include "Co2.h"
+#include "Storage.h"        // Wifi
+#include "FirebaseHelpers.h"// Store data
+#include "Co2.h"            // 
+#include "Temp.h"           // AM2302 DHT22
+#include "Fan.h"            // 
 
 class MainSystem
 {
@@ -9,6 +11,8 @@ public:
   Storage storage;
   FirebaseHelpers firebaseHelpers;
   Co2 co2;
+  Temp temp;
+  Fan fan;
 
   void init();
 };
@@ -27,7 +31,10 @@ void MainSystem::init()
   storage.setupWifi();
   firebaseHelpers.setupFirebase();
   storage.setupTime();
+  
   co2.setup();
+  temp.setup();
+  fan.setup();  
 }
 
 MainSystem mainSystem;
@@ -39,25 +46,18 @@ MainSystem mainSystem;
 void setup()
 {
   Serial.begin(115200); // esp8266
-
   mainSystem.init();
 }
 
 void loop()
 {
-  int val1, val2;
-  mainSystem.co2.read(&val1, &val2);
-  Serial.print("CCS811: ");
-  Serial.print("eco2=");
-  Serial.print(val1);
-  Serial.print(" ppm  ");
+  int co2_val, voc_val;
+  mainSystem.co2.read(&co2_val, &voc_val);
 
-  Serial.print("etvoc=");
-  Serial.print(val2);
-  Serial.print(" ppb  ");
-  Serial.println();
+  int temp_val, hum_val;
+  mainSystem.temp.read(&temp_val, &hum_val);
+
+  mainSystem.firebaseHelpers.saveLog(mainSystem.storage.getTime(), co2_val, voc_val, temp_val, hum_val);
   
-  mainSystem.firebaseHelpers.saveLog(mainSystem.storage.getTime(), val1, val2);
-  
-  delay(20000);
+  delay(60 * 1000);
 }
