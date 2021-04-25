@@ -9,7 +9,8 @@ public:
   void setupFirebase();
 
   void saveLog(long epochTime, int co2, int voc, int tmp, int hum);
-  int readFan();  
+  int readInt(String path);
+  void saveInt(String path, int value);
 
   /* The helper function to get the token status string */
   String getTokenStatus(struct token_info_t info);

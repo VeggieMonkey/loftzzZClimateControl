@@ -127,10 +127,27 @@ String FirebaseHelpers::getTokenError(struct token_info_t info)
   return s;
 }
 
-int FirebaseHelpers::readFan()
+int FirebaseHelpers::readInt(String path)
 {
-  String rootpath = "/fan";
-  return 1;
+  if (!Firebase.RTDB.getInt(&fbdo, path.c_str())) {
+    Serial.print("FAILED to read: ");
+    Serial.println(path);
+    Serial.println("REASON: " + fbdo.errorReason());
+    return -1;
+  }
+  
+  Serial.print("Value (");
+  Serial.print(path);
+  Serial.print("): ");
+  int result = fbdo.intData();
+  Serial.println(result);
+
+  return result;
+}
+
+void FirebaseHelpers::saveInt(String path, int value)
+{
+  Firebase.RTDB.set(&fbdo, path.c_str(), value);
 }
 
 void FirebaseHelpers::saveLog(long epochTime, int co2, int voc, int tmp, int hum)
