@@ -8,7 +8,7 @@ class MainSystem
 {
 public:
   MainSystem();
-  void overTemperatureThreshold();
+  void overTemperatureThreshold(int currentTemp);
   void underTemperatureThreshold();
   void adjustToOnlineSettings();
   void setupThresholds();
@@ -35,9 +35,9 @@ MainSystem::MainSystem()
 };
 void MainSystem::setupThresholds(){
   fan1TempThreshold = firebaseHelpers.readInt(fan1.keyTempThreshold);
-  fan1HumThreshold = firebaseHelpers.readInt(fan1.keyTempThreshold);
-  fan1VoCThreshold = firebaseHelpers.readInt(fan1.keyTempThreshold);
-  fan1Co2Threshold = firebaseHelpers.readInt(fan1.keyTempThreshold);
+  fan1HumThreshold = firebaseHelpers.readInt(fan1.keyHumThreshold);
+  fan1VoCThreshold = firebaseHelpers.readInt(fan1.keyVoCThreshold);
+  fan1Co2Threshold = firebaseHelpers.readInt(fan1.keyCo2Threshold);
 }
 // doing this stuff here, because the constructor
 // is called before Serial is initialized
@@ -65,7 +65,7 @@ int MainSystem::getFan1Speed() {
 }
 
 // this is only for automatic control mode
-void MainSystem::overTemperatureThreshold()
+void MainSystem::overTemperatureThreshold(int currentTemp)
 {
   int fanSpeed = getFan1Speed();
 
@@ -75,6 +75,9 @@ void MainSystem::overTemperatureThreshold()
     firebaseHelpers.saveInt(fan1.keySpeed, 100);
     // turn it on physically
     fan1.on();
+    // Map (change) the sensor reading of <=15 to >=25 to a value between 10 and 100
+    // int fanSpeedPercent = map(currentTemp, 15, 25, 40, 100);
+    // fan1.modifySpeed(90);
   }
 }
 
@@ -90,10 +93,10 @@ void MainSystem::adjustToOnlineSettings() {
   int fanSpeed = getFan1Speed();
   Serial.print("Manual mode, using online speed: ");
   Serial.println(fanSpeed);
-  if (fanSpeed == 0) {
+  if (fanSpeed <= 30) {
     fan1.off();
   } else {
-    fan1.on();
+    fan1.modifySpeed(fanSpeed);
   }
 }
 
@@ -108,15 +111,27 @@ void setup()
 }
 
 // considerations for a more advanced threshold system:
-//int debounce = 2 * 60 * 1000; // change state after x mins at threshold
-//double debounceCounter = 0;
+// int debounce = 2 * 60 * 1000; // change state after x mins at threshold
+// double debounceCounter = 0;
 // int tempLowThreshold = 21; // turn off below 20
 // int tempHighThreshold = 20; // turn on above 20
 
 void loop()
 {
-  int co2_val, voc_val;
-  mainSystem.co2.read(&co2_val, &voc_val);
+  delay(10 * 1000);
+    
+  int co2_val = -1;
+  int voc_val = -1;
+  long runningTime = millis();
+  if (runningTime < 20 * 60 * 1000) {
+    Serial.print("Running time (minutes): ");
+    Serial.println(runningTime / 60 / 1000);
+   
+    Serial.println("System has not been running for more than 20 mins, not reading sensors yet.");
+    // return;
+  } else {
+    mainSystem.co2.read(&co2_val, &voc_val);  
+  }
 
   int temp_val, hum_val;
   mainSystem.temp.read(&temp_val, &hum_val);
@@ -147,7 +162,7 @@ void loop()
 
     if (temp_val > mainSystem.fan1TempThreshold)
     {
-      mainSystem.overTemperatureThreshold();
+      mainSystem.overTemperatureThreshold(temp_val);
     }
     else
     {
@@ -162,6 +177,4 @@ void loop()
     // to be sure we catch any changes from the app
     mainSystem.adjustToOnlineSettings();    
   }
-
-  delay(10 * 1000);
 }
