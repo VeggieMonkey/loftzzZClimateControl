@@ -2,19 +2,14 @@ import React from "react";
 
 import { Loading } from "../common/Loading";
 import { useLogs } from "../hooks/useLogs";
-import { Log } from "../hooks/types";
 import { SimpleTimeSeries } from "../common/FusionGraph";
-import dayjs from "dayjs";
+import { displayDate } from "../utils/date";
 
 // Data
 type DataFormat = [string, any, any];
 
-export const Logs3 = () => {
-  const { data, isLoading } = useLogs();
-  // const { data, isLoading }: { data: Log; isLoading: boolean } = {
-  //   data: [],
-  //   isLoading: false,
-  // };
+export const Logs = () => {
+  const { data, isLoading } = useLogs({ limit: 500 });
 
   if (isLoading) {
     return <Loading />;
@@ -26,20 +21,11 @@ export const Logs3 = () => {
     return <div>No data found.</div>;
   }
 
-  const showLast = 10000;
   const allData = Object.entries(data);
-  const length = allData.length;
-  const truncatedData = allData.splice(length - showLast, length);
-  // const truncatedData = Object.entries(data);
   const processedData: DataFormat[] = [];
 
-  truncatedData.forEach((value) => {
-    const readingDate = dayjs(Number(value[0]) * 1000).format(
-      "DD/MM/YYYY H:m:s"
-    );
-    // const readingDate = Number(`${value[0]}`);
-    // const readingDate = Number(`${value[0]}000`);
-    // const readingDate = new Date(Number(`${value[0]}000`));
+  allData.forEach((value) => {
+    const readingDate = displayDate(Number(value[0]) * 1000);
 
     if (Number(value[1].co2) === 0) {
       return;

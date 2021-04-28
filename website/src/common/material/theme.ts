@@ -1,4 +1,4 @@
-import { createMuiTheme } from "@material-ui/core/styles";
+import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
 
 export const getTheme = (prefersDarkMode: boolean) => {
   return createMuiTheme({
@@ -14,3 +14,12 @@ export const getTheme = (prefersDarkMode: boolean) => {
     },
   });
 };
+
+export const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+  },
+  table: {
+    minWidth: 650,
+  },
+}));

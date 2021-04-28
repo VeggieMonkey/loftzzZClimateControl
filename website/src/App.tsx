@@ -23,7 +23,7 @@ function App() {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient} contextSharing={true}>
       <Router>
         <Wrapper>
           <Sidebar>
@@ -42,7 +42,7 @@ function App() {
           </Sidebar>
         </Wrapper>
       </Router>
-      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 }

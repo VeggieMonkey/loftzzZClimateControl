@@ -26,6 +26,12 @@ SCL - d1
 SDA - d2
 WAK - g
 
+Temp - DHT22
+
+VCC - 3v
+GND - g
+DAT - D3
+
 ## DB structure
 
 firebase function to process last 24 hours.
