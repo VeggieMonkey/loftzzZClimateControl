@@ -5,8 +5,9 @@ import { pages } from "./pages";
 
 export const Sidebar: React.FC = ({ children }) => {
   const renderTopBarRight = ({ handleClick }: { handleClick: () => void }) => {
-    return null;
+    return <></>;
   };
+
   return (
     <NavBar
       title="House Environment Controls and Charts"
