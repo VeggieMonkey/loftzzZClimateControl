@@ -18,19 +18,31 @@ Add this snippit to a new file here called `Secrets.h`
 
 ## Board configuration
 
-Co2 - CCS811
+### Co2 - CCS811
 
-VCC - 3v
-GND - g
-SCL - d1
-SDA - d2
-WAK - g
+```
+VCC -> 3v
+GND -> g
+SCL -> d1
+SDA -> d2
+WAK -> g
+```
 
-Temp - DHT22
+### Temp - DHT22
 
-VCC - 3v
-GND - g
-DAT - D3
+```
+VCC -> 3v
+GND -> g
+DAT -> D3
+```
+
+### Fan - Fan
+
+```
+S -> D8
++ -> 3v
+- -> g
+```
 
 ## DB structure
 

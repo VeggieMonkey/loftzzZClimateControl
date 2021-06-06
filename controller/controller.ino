@@ -3,6 +3,7 @@
 #include "Co2.h"             //
 #include "Temp.h"            // AM2302 DHT22
 #include "Fan.h"             //
+#include "OTA.h"             // for updates 'over the air'
 
 class MainSystem
 {
@@ -26,6 +27,7 @@ public:
   Co2 co2;
   Temp temp;
   Fan fan1;
+  OTA ota;
 
   void init();
 };
@@ -53,6 +55,7 @@ void MainSystem::init()
   co2.setup();
   temp.setup();
   fan1.setup("fan1");
+  ota.setup();
 
   setupThresholds();
 }
@@ -118,6 +121,8 @@ void setup()
 
 void loop()
 {
+  mainSystem.ota.loop();
+  
   delay(10 * 1000);
     
   int co2_val = -1;
