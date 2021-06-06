@@ -18,7 +18,8 @@ export const Fan: React.FC = () => {
 
   const handleSelected = () => {
     const newSpeed = data.fan1 ? (data.fan1.speed === 100 ? 0 : 100) : 100;
-    updateFanSettings.mutate({ fan1: { speed: newSpeed } });
+    updateFanSettings.mutate({ fan1: { ...data.fan1, speed: newSpeed } });
+    // updateFanSettings.mutate({ fan1: { speed: newSpeed } }); // <- this deleted all other keys
   };
 
   return (

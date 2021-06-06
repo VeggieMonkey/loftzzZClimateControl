@@ -15,6 +15,7 @@ public:
   void setupThresholds();
   int getFan1Speed(); // get running speed
   int systemMode = 1; // automatic
+  int pollIntervalSeconds = 60;
 
   // we will initialize these values from firebase:
   int fan1TempThreshold;
@@ -123,7 +124,7 @@ void loop()
 {
   mainSystem.ota.loop();
   
-  delay(10 * 1000);
+  delay(mainSystem.pollIntervalSeconds * 1000);
     
   int co2_val = -1;
   int voc_val = -1;
@@ -132,13 +133,13 @@ void loop()
     Serial.print("Running time (minutes): ");
     Serial.println(runningTime / 60 / 1000);
    
-    Serial.println("System has not been running for more than 20 mins, not reading sensors yet.");
+    Serial.println("System has not been running for more than 20 mins, not reading co2 sensor yet.");
     // return;
   } else {
     mainSystem.co2.read(&co2_val, &voc_val);  
   }
 
-  int temp_val, hum_val;
+  float temp_val, hum_val;
   mainSystem.temp.read(&temp_val, &hum_val);
 
   int nettime = mainSystem.storage.getTime();

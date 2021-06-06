@@ -10,6 +10,7 @@ NTPClient timeClient(ntpUDP, "pool.ntp.org", utcOffsetInSeconds);
 
 void Storage::setupWifi()
 {
+  WiFi.mode(WIFI_STA);
   WiFi.begin(SECRET_WIFI_SSID, SECRET_WIFI_PASS);
   Serial.println(" ");
   Serial.println(" ");

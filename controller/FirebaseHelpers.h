@@ -8,7 +8,7 @@ public:
 
   void setupFirebase();
 
-  void saveLog(long epochTime, int co2, int voc, int tmp, int hum);
+  void saveLog(long epochTime, int co2, int voc, float tmp, float hum);
   int readInt(String path);
   void saveInt(String path, int value);
 

@@ -16,7 +16,7 @@ void Temp::setup()
   Serial.println(" complete!");
 }
 
-void Temp::read(int *val1, int *val2)
+void Temp::read(float *val1, float *val2)
 {
   // use the functions which are supplied by library.
   float h = dht.readHumidity();
@@ -33,10 +33,10 @@ void Temp::read(int *val1, int *val2)
   // print the result to Terminal
   Serial.print("Humidity: ");
   Serial.print(h);
-  Serial.print(" %\t");
+  Serial.print("%\t");
   Serial.print("Temperature: ");
   Serial.print(t);
-  Serial.println(" *C");
+  Serial.println("*C");
 
   *val1 = t;
   *val2 = h;

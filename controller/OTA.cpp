@@ -37,7 +37,9 @@ void OTA::setup()
     else if (error == OTA_RECEIVE_ERROR) Serial.println("Receive Failed");
     else if (error == OTA_END_ERROR) Serial.println("End Failed");
   });
-  
+
+  ArduinoOTA.setPort(8266);
+
   ArduinoOTA.begin();
   
   Serial.println("OTA Ready");

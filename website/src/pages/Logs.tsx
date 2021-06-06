@@ -6,7 +6,7 @@ import { SimpleTimeSeries } from "../common/FusionGraph";
 import { displayDate } from "../utils/date";
 
 // Data
-type DataFormat = [string, any, any];
+type DataFormat = [string, any, any, any, any];
 
 export const Logs = () => {
   const { data, isLoading } = useLogs({ limit: 500 });
@@ -35,7 +35,13 @@ export const Logs = () => {
       return;
     }
 
-    processedData.push([readingDate, value[1].co2, value[1].voc]);
+    processedData.push([
+      readingDate,
+      value[1].co2,
+      value[1].voc,
+      value[1].tmp,
+      value[1].hum,
+    ]);
   });
 
   return (

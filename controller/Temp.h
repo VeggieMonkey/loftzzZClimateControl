@@ -4,5 +4,5 @@ class Temp
 {
 public:
   void setup();
-  void read(int *val1, int *val2);
+  void read(float *val1, float *val2);
 };

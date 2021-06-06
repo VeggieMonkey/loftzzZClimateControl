@@ -70,3 +70,13 @@ export const useLogsForRange = (start: number, end: number) => {
 };
 
 // delete logs in range of: x -> y
+
+export const smokeAllLogs = () => {
+  let ref = database.ref(FIREBASE_KEY).limitToFirst(10000);
+
+  ref.once("value", (snapshot) => {
+    snapshot.forEach((child) => {
+      child.ref.remove();
+    });
+  });
+};

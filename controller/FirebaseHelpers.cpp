@@ -150,17 +150,23 @@ void FirebaseHelpers::saveInt(String path, int value)
   Firebase.RTDB.set(&fbdo, path.c_str(), value);
 }
 
-void FirebaseHelpers::saveLog(long epochTime, int co2, int voc, int tmp, int hum)
+void FirebaseHelpers::saveLog(long epochTime, int co2, int voc, float tmp, float hum)
 {
   String timeKey = (String)epochTime;
   String rootpath = "/logs";
   String fullPath = rootpath + "/" + timeKey;
 
+  Serial.println("Trying to save:");
+  Serial.println(co2);
+  Serial.println(voc);
+  Serial.println(tmp);
+  Serial.println(hum);
+
   FirebaseJson dataToSave;
   dataToSave.set("co2", co2);
   dataToSave.set("voc", voc);
   dataToSave.set("tmp", tmp);
-  dataToSave.set("hum", hum);
+  dataToSave.set("hum", (int) hum);
 
   Firebase.RTDB.set(&fbdo, fullPath.c_str(), &dataToSave);
 }

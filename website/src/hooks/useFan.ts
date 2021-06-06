@@ -5,6 +5,21 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 const FIREBASE_KEY = "fan";
 const QUERY_KEY = "fan";
 
+/*
+*
+fan: {
+  fan1: {
+    co2Threshold: 800,
+    humThreshold: 50,
+    speed: 100,
+    systemMode: 2,
+    tempThreshold: 23,
+    vocThreshold: 10000,
+  }
+}
+*
+*/
+
 export const useFan = ({ name }: { name?: string } = {}) => {
   return useQuery<FanSettingsFirebase, Error>(
     QUERY_KEY,
