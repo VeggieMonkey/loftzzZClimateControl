@@ -1,16 +1,34 @@
 import React from "react";
 
 import { Title, ToggleButton } from "../common";
+import { mutateFan, useFan } from "../hooks/useFan";
 
 export const Fan: React.FC = () => {
-  const [state, handleSelected] = React.useState(false);
+  const updateFanSettings = mutateFan("fan1");
+  const { data, isLoading } = useFan();
+  const [state] = React.useState(false);
 
-  console.log("state", state);
+  if (isLoading) {
+    return null;
+  }
+
+  if (!data) {
+    return <>Missing data</>;
+  }
+
+  const handleSelected = () => {
+    const newSpeed = data.fan1 ? (data.fan1.speed === 100 ? 0 : 100) : 100;
+    updateFanSettings.mutate({ fan1: { ...data.fan1, speed: newSpeed } });
+    // updateFanSettings.mutate({ fan1: { speed: newSpeed } }); // <- this deleted all other keys
+  };
 
   return (
     <>
       <Title>Fan control settings</Title>
-      Enabled: <ToggleButton handleSelected={handleSelected} />
+      <div>
+        Enabled: <ToggleButton handleSelected={handleSelected} />
+      </div>
+      <div>Speed: {data.fan1 ? data.fan1.speed : "unknown"}</div>
     </>
   );
 };

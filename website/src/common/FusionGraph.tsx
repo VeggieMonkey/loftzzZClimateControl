@@ -32,6 +32,14 @@ export const SimpleTimeSeries: React.FC<{ data: any }> = ({ data }) => {
       name: "VoC",
       type: "number",
     },
+    {
+      name: "Temp",
+      type: "number",
+    },
+    {
+      name: "Humidity",
+      type: "number",
+    },
   ];
 
   // Here we are creating our DataTable
@@ -44,7 +52,7 @@ export const SimpleTimeSeries: React.FC<{ data: any }> = ({ data }) => {
     type: "timeseries",
     renderAt: "container",
     width: "1000",
-    height: "400",
+    height: "600",
     dataSource: {
       caption: { text: "House Environment Statistics" },
       data: fusionTable,

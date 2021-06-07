@@ -1,22 +1,36 @@
-import React from "react";
-import type firebase from "firebase";
-import dayjs from "dayjs";
-
 import { database } from "./useFirebase";
-import type { Log } from "./types";
+import type { LogFirebase } from "./types";
 import { useQuery } from "react-query";
 
-const FIREBASE_LOG_KEY = "logs";
+const FIREBASE_KEY = "logs";
 const QUERY_KEY = "logs";
 
-export const useLogs = () => {
-  return useQuery<Log, Error>(
-    QUERY_KEY,
+export const useFirstLog = () => {
+  return useLogs({ first: 1, key: "first" });
+};
+
+export const useLogs = ({
+  limit,
+  first,
+  key,
+}: { first?: number; limit?: number; key?: string } = {}) => {
+  return useQuery<LogFirebase, Error>(
+    [QUERY_KEY, key],
     () => {
-      const logRef = database.ref(FIREBASE_LOG_KEY);
+      let ref = database.ref(FIREBASE_KEY).orderByKey();
+
+      if (limit) {
+        // console.log("Adding limit:", limit);
+        ref = ref.limitToLast(limit);
+      }
+
+      if (first) {
+        // console.log("Adding first:", first);
+        ref = ref.limitToFirst(first);
+      }
 
       return new Promise((resolve) => {
-        logRef.once("value", (snapshot) => {
+        ref.once("value", (snapshot) => {
           const data = snapshot.val();
           // console.log("data", data);
           resolve(data);
@@ -28,4 +42,41 @@ export const useLogs = () => {
       cacheTime: 10000,
     }
   );
+};
+
+export const useLogsForRange = (start: number, end: number) => {
+  return useQuery<LogFirebase, Error>(
+    QUERY_KEY,
+    () => {
+      const ref = database
+        .ref(FIREBASE_KEY)
+        .orderByKey()
+        .startAt(String(start))
+        .endAt(String(end));
+
+      return new Promise((resolve) => {
+        ref.once("value", (snapshot) => {
+          const data = snapshot.val();
+          // console.log("data", data);
+          resolve(data);
+        });
+      });
+    },
+    {
+      staleTime: 10000,
+      cacheTime: 10000,
+    }
+  );
+};
+
+// delete logs in range of: x -> y
+
+export const smokeAllLogs = () => {
+  let ref = database.ref(FIREBASE_KEY).limitToFirst(10000);
+
+  ref.once("value", (snapshot) => {
+    snapshot.forEach((child) => {
+      child.ref.remove();
+    });
+  });
 };

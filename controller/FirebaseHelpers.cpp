@@ -127,15 +127,46 @@ String FirebaseHelpers::getTokenError(struct token_info_t info)
   return s;
 }
 
-void FirebaseHelpers::saveLog(long epochTime, int co2, int voc)
+int FirebaseHelpers::readInt(String path)
+{
+  if (!Firebase.RTDB.getInt(&fbdo, path.c_str())) {
+    Serial.print("FAILED to read: ");
+    Serial.println(path);
+    Serial.println("REASON: " + fbdo.errorReason());
+    return -1;
+  }
+  
+  Serial.print("Value (");
+  Serial.print(path);
+  Serial.print("): ");
+  int result = fbdo.intData();
+  Serial.println(result);
+
+  return result;
+}
+
+void FirebaseHelpers::saveInt(String path, int value)
+{
+  Firebase.RTDB.set(&fbdo, path.c_str(), value);
+}
+
+void FirebaseHelpers::saveLog(long epochTime, int co2, int voc, float tmp, float hum)
 {
   String timeKey = (String)epochTime;
   String rootpath = "/logs";
   String fullPath = rootpath + "/" + timeKey;
 
+  Serial.println("Trying to save:");
+  Serial.println(co2);
+  Serial.println(voc);
+  Serial.println(tmp);
+  Serial.println(hum);
+
   FirebaseJson dataToSave;
   dataToSave.set("co2", co2);
   dataToSave.set("voc", voc);
+  dataToSave.set("tmp", tmp);
+  dataToSave.set("hum", (int) hum);
 
   Firebase.RTDB.set(&fbdo, fullPath.c_str(), &dataToSave);
 }

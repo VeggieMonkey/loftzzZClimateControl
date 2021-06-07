@@ -5,11 +5,12 @@
 #include "Secrets.h"
 
 WiFiUDP ntpUDP;
-const long utcOffsetInSeconds = 7200; // utc+1=3600, utc+2=7200 (daylight savings)
+const long utcOffsetInSeconds = 0; // utc+1=3600, utc+2=7200 (daylight savings)
 NTPClient timeClient(ntpUDP, "pool.ntp.org", utcOffsetInSeconds);
 
 void Storage::setupWifi()
 {
+  WiFi.mode(WIFI_STA);
   WiFi.begin(SECRET_WIFI_SSID, SECRET_WIFI_PASS);
   Serial.println(" ");
   Serial.println(" ");
